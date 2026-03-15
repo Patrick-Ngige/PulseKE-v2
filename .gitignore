@@ -1,1 +1,15 @@
-node_modules
+# Environment variables - NEVER commit these
+.env.local
+.env.*.local
+.env
+
+# Next.js
+.next/
+out/
+
+# Dependencies
+node_modules/
+
+# Build output
+build/
+dist/

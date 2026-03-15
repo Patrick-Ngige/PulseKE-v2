@@ -33,3 +33,4 @@ export default function ScoreRing({ score, size = 72, className }: { score: numb
     </div>
   );
 }
+ 

@@ -1,6 +1,8 @@
 {
-  "/page": "app/page.js",
   "/portfolio/page": "app/portfolio/page.js",
-  "/services/page": "app/services/page.js",
-  "/portfolio/[slug]/page": "app/portfolio/[slug]/page.js"
+  "/page": "app/page.js",
+  "/portfolio/[slug]/page": "app/portfolio/[slug]/page.js",
+  "/api/audit/route": "app/api/audit/route.js",
+  "/api/pagespeed/route": "app/api/pagespeed/route.js",
+  "/api/intelligence/route": "app/api/intelligence/route.js"
 }
