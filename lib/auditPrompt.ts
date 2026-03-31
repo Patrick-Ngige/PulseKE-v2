@@ -11,29 +11,44 @@
 //   - Agency dimensions replace consumer dimensions when agency detected
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { IntelligenceContext, PageSpeedData } from './auditTypes';
+import { IntelligenceContext, PageSpeedData } from "./auditTypes";
 
 interface PromptInput {
-  url:          string;
-  focus:        string;
+  url: string;
+  focus: string;
   intelligence: IntelligenceContext;
-  pageSpeed?:   PageSpeedData | null;
+  pageSpeed?: PageSpeedData | null;
 }
 
 // ── Agency detection ──────────────────────────────────────────────────────────
 
 const AGENCY_SIGNALS = [
-  'advertising agency', 'marketing agency', 'creative agency', 'integrated agency',
-  'communications agency', 'media agency', 'pr agency', 'digital agency',
-  'brand agency', 'production house', 'content agency', 'design agency',
-  'we are an agency', 'our agency', 'client work', 'campaign for', 'we created for',
+  "advertising agency",
+  "marketing agency",
+  "creative agency",
+  "integrated agency",
+  "communications agency",
+  "media agency",
+  "pr agency",
+  "digital agency",
+  "brand agency",
+  "production house",
+  "content agency",
+  "design agency",
+  "we are an agency",
+  "our agency",
+  "client work",
+  "campaign for",
+  "we created for",
 ];
 
 export function isAgency(intelligence: IntelligenceContext): boolean {
   const combined = (
-    intelligence.siteOverview + intelligence.socialProfiles + intelligence.competitors
+    intelligence.siteOverview +
+    intelligence.socialProfiles +
+    intelligence.competitors
   ).toLowerCase();
-  return AGENCY_SIGNALS.some(s => combined.includes(s));
+  return AGENCY_SIGNALS.some((s) => combined.includes(s));
 }
 
 // ── PageSpeed section ─────────────────────────────────────────────────────────
@@ -42,16 +57,21 @@ function buildPageSpeedSection(ps: PageSpeedData): string {
   return `
 
 REAL PAGESPEED DATA — use these exact numbers in the technical dimension:
-Performance: ${ps.performance ?? 'N/A'}/100 | SEO: ${ps.seo ?? 'N/A'}/100 | Accessibility: ${ps.accessibility ?? 'N/A'}/100 | Best Practices: ${ps.bestPractices ?? 'N/A'}/100
-LCP: ${ps.lcp ? (ps.lcp/1000).toFixed(1)+'s' : 'N/A'} | FCP: ${ps.fcp ? (ps.fcp/1000).toFixed(1)+'s' : 'N/A'} | TTFB: ${ps.ttfb ? (ps.ttfb/1000).toFixed(1)+'s' : 'N/A'} | CLS: ${ps.cls ?? 'N/A'}
-Core Web Vitals: ${ps.assessment ?? 'unknown'}
-Top opportunities: ${ps.opportunities?.map(o => `${o.title} (saves ${(o.savings/1000).toFixed(1)}s)`).join(', ') || 'none'}`;
+Performance: ${ps.performance ?? "N/A"}/100 | SEO: ${ps.seo ?? "N/A"}/100 | Accessibility: ${ps.accessibility ?? "N/A"}/100 | Best Practices: ${ps.bestPractices ?? "N/A"}/100
+LCP: ${ps.lcp ? (ps.lcp / 1000).toFixed(1) + "s" : "N/A"} | FCP: ${ps.fcp ? (ps.fcp / 1000).toFixed(1) + "s" : "N/A"} | TTFB: ${ps.ttfb ? (ps.ttfb / 1000).toFixed(1) + "s" : "N/A"} | CLS: ${ps.cls ?? "N/A"}
+Core Web Vitals: ${ps.assessment ?? "unknown"}
+Top opportunities: ${ps.opportunities?.map((o) => `${o.title} (saves ${(o.savings / 1000).toFixed(1)}s)`).join(", ") || "none"}`;
 }
 
 // ── Main entry point ──────────────────────────────────────────────────────────
 
-export function buildAuditPrompt({ url, focus, intelligence, pageSpeed }: PromptInput): string {
-  const ps        = pageSpeed ? buildPageSpeedSection(pageSpeed) : '';
+export function buildAuditPrompt({
+  url,
+  focus,
+  intelligence,
+  pageSpeed,
+}: PromptInput): string {
+  const ps = pageSpeed ? buildPageSpeedSection(pageSpeed) : "";
   const agencyMode = isAgency(intelligence);
   return agencyMode
     ? buildAgencyPrompt({ url, focus, intelligence, ps })
@@ -378,7 +398,6 @@ Return ONLY valid JSON (no markdown, no explanation):
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const intelligencePrompts = {
-
   siteOverview: (url: string) =>
     `Browse ${url} and ALL key subpages (check /services, /about, /work, /our-work, /team, /portfolio, /case-studies, and any sub-brand URLs). Extract: main headline, value proposition, all CTAs and their placement, target audience signals, pricing if visible, trust signals (testimonials, client logos, awards), full navigation structure, blog or content section, any technology or web development department or sub-brand, awards or certifications, network affiliations (e.g. global agency network). List every sub-brand you find. Be thorough.`,
 
